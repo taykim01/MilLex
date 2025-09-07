@@ -1,3 +1,4 @@
+import { Footer } from "@/components/common/footer";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -137,14 +138,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 bg-gray-950">
-        <div className="container mx-auto px-4 md:px-6 text-center text-gray-500">
-          <p>&copy; 2025 ROKMC_BIGDATA. All rights reserved.</p>
-          <p className="mt-2 text-sm">
-            본 프로젝트는 국방 및 군사 목적으로 개발되었습니다.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

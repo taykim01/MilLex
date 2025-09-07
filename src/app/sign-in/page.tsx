@@ -1,5 +1,7 @@
 "use client";
 
+import { Footer } from "@/components/common/footer";
+import { Header } from "@/components/common/header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,23 +12,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useSignIn } from "@/hooks/use-sign-in";
-import Link from "next/link";
 
 export default function SignInPage() {
-  const { user, loading, signIn, setEmail, setPassword, email, password } =
-    useSignIn();
+  const { loading, signIn, setEmail, setPassword } = useSignIn();
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-900 text-white">
-      <header className="sticky top-0 z-50 w-full border-b border-gray-700 bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-gray-900/60">
-        <div className="container flex h-14 items-center">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-500">
-              ROKMC_BIGDATA
-            </span>
-          </Link>
-        </div>
-      </header>
+      <Header />
       <main className="flex flex-1 items-center justify-center p-4">
         <Card className="w-full max-w-md bg-gray-800 border-gray-700 text-white">
           <CardHeader className="text-center">
@@ -79,14 +71,7 @@ export default function SignInPage() {
           </CardContent>
         </Card>
       </main>
-      <footer className="py-6 bg-gray-950">
-        <div className="container mx-auto px-4 md:px-6 text-center text-gray-500">
-          <p>&copy; 2025 ROKMC_BIGDATA. All rights reserved.</p>
-          <p className="mt-2 text-sm">
-            본 프로젝트는 국방 및 군사 목적으로 개발되었습니다.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

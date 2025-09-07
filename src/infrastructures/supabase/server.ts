@@ -13,7 +13,7 @@ type CookieToSet = {
     expires?: Date;
     secure?: boolean;
     httpOnly?: boolean;
-    sameSite?: "Strict" | "Lax" | "None";
+    sameSite?: boolean | "none" | "lax" | "strict";
   };
 };
 

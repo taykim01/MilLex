@@ -1,11 +1,12 @@
-"use client";
+"use client"
 
+import { Footer } from "@/components/common/footer";
+import { Header } from "@/components/common/header";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "@/hooks/use-translation";
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 
 export default function DashboardPage() {
   const { loading, setQuery, response, translate, setTranslateLanguage } =
@@ -13,18 +14,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-900 text-white font-sans">
-      <header className="sticky top-0 z-50 w-full border-b border-gray-700 bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-gray-900/60">
-        <div className="container flex h-14 items-center justify-between">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-500">
-              ROKMC_BIGDATA
-            </span>
-          </Link>
-          <nav>
-            <Button variant="ghost">로그아웃</Button>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       <main className="flex-1 p-4 sm:p-6 md:p-8">
         <div className="container mx-auto">
@@ -70,7 +60,7 @@ export default function DashboardPage() {
                   onClick={translate}
                   disabled={loading}
                 >
-                  {loading ? "번역 중..." : "`번역하기"}{" "}
+                  {loading ? "번역 중..." : "번역하기"}{" "}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
@@ -105,14 +95,7 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      <footer className="py-6 bg-gray-950">
-        <div className="container mx-auto px-4 md:px-6 text-center text-gray-500">
-          <p>&copy; 2025 ROKMC_BIGDATA. All rights reserved.</p>
-          <p className="mt-2 text-sm">
-            본 프로젝트는 국방 및 군사 목적으로 개발되었습니다.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
