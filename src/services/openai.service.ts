@@ -1,6 +1,6 @@
 import { openai } from "@/infrastructures/openai";
 
-type ModelTypes = "gpt-5" | "gpt-4o-mini" | "text-embedding-3-large";
+type ModelTypes = "gpt-5" | "gpt-4o" | "gpt-4o-mini" | "text-embedding-3-large";
 type ResponseTypes = "json_object" | "text";
 export type ChatCompletionParam = {
   role: "system" | "user" | "assistant";

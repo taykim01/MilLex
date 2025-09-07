@@ -135,7 +135,7 @@ export default class SupabaseService<Entity> {
     embedding: number[],
     rpc: string,
     match_count: number = 10,
-    params: object
+    params?: object
   ) {
     const supabase = await createClient();
     const { data, error } = await supabase.rpc(rpc, {
