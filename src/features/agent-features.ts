@@ -23,7 +23,7 @@ export async function handleTranslate(
   );
   const similarNotes: TermsTable[] = await termsService.getSimilarVector(
     queryVector,
-    "query_note",
+    "query_term",
     5
   );
   if (similarNotes.length === 0)

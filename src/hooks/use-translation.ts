@@ -15,14 +15,16 @@ export function useTranslation() {
   const translate = async () => {
     setLoading(true);
     try {
-      if(!query) throw new Error("Query is empty");
+      if(!query) throw "번역할 내용을 입력하세요.";
       const { data, error } = await handleTranslate(query, translateLanguage);
-      if (!data) throw new Error("User or settings data not found");
+      if (!data) throw "사용자 또는 설정 정보를 찾을 수 없습니다.";
       if (error) throw error;
       setResponse(data);
-      toast("Translation finished!");
+      toast("번역이 완료되었습니다!");
     } catch (error) {
-      toast.error(error as string);
+      const err = typeof error === "string" ? error : "번역 중 오류가 발생했습니다.";
+      console.error(err);
+      toast.error(err);
     } finally {
       setLoading(false);
     }
