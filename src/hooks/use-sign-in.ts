@@ -34,7 +34,6 @@ export function useSignIn() {
 
   useEffect(() => {
     if (user && Object.keys(user).length > 0) {
-      toast("이미 로그인되어 있습니다.");
       router.push("/dashboard");
     }
   }, [user, router]);

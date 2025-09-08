@@ -26,7 +26,11 @@ export default function SignInPage() {
               로그인
             </CardTitle>
             <CardDescription className="text-gray-400">
-              보안 액세스를 위해 자격 증명을 입력하세요.
+              <div className="mt-2 text-sm">
+              <span className="block">시범 계정</span>
+              <span className="block">이메일: <span className="font-medium text-gray-300">demo@demo.com</span></span>
+              <span className="block">비밀번호: <span className="font-medium text-gray-300">demo1234</span></span>
+              </div>
             </CardDescription>
           </CardHeader>
           <CardContent>
