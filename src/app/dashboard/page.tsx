@@ -297,7 +297,7 @@ export default function DashboardPage() {
               <div className="mt-4 flex justify-center">
                 <Button
                   size="lg"
-                  className="bg-green-400 hover:bg-green-500 text-white font-bold"
+                  className="bg-green-600 hover:bg-green-700 text-white font-bold"
                   onClick={translate}
                   disabled={loading}
                 >

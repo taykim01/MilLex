@@ -26,7 +26,8 @@ export async function handleTranslate(
     "query_term",
     4,
     undefined,
-    0.8
+    0.8,
+    60000
   );
 
   const refinedNotes = (similarNotes || []).map((note) => ({
