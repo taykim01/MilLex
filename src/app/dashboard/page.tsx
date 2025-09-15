@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Footer } from "@/components/common/footer";
 import { Header } from "@/components/common/header";
@@ -6,11 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "@/hooks/use-translation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function DashboardPage() {
-  const { loading, setQuery, response, translate, setTranslateLanguage } =
-    useTranslation();
+  const {
+    loading,
+    setQuery,
+    response,
+    translate,
+    setTranslateLanguage,
+    sources,
+  } = useTranslation();
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-900 text-white font-sans">
@@ -40,7 +52,7 @@ export default function DashboardPage() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="KorEng">
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 <Textarea
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="번역할 한국어 내용을 입력하세요..."
@@ -52,6 +64,56 @@ export default function DashboardPage() {
                   readOnly
                   className="h-64 text-lg bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                 />
+                {sources && sources.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <TooltipProvider>
+                      {sources.map((s, idx) => (
+                        <Tooltip key={idx}>
+                          <TooltipTrigger asChild>
+                            <span className="inline-flex items-center gap-1 rounded-full bg-gray-800 border border-gray-700 px-2 py-1 text-xs text-gray-200 cursor-help">
+                              <Info className="h-3.5 w-3.5 text-green-400" />
+                              Source {idx + 1}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="top"
+                            className="max-w-xs break-words"
+                          >
+                            <div className="text-xs space-y-1">
+                              {s.source && (
+                                <div>
+                                  <span className="text-gray-400">Source:</span>{" "}
+                                  {s.source}
+                                </div>
+                              )}
+                              {s.category && (
+                                <div>
+                                  <span className="text-gray-400">
+                                    Category:
+                                  </span>{" "}
+                                  {s.category}
+                                </div>
+                              )}
+                              <div>
+                                <span className="text-gray-400">Korean:</span>{" "}
+                                {s.korean}
+                              </div>
+                              <div>
+                                <span className="text-gray-400">English:</span>{" "}
+                                {s.english}
+                              </div>
+                              {s.description && (
+                                <div className="text-gray-500">
+                                  {s.description}
+                                </div>
+                              )}
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      ))}
+                    </TooltipProvider>
+                  </div>
+                )}
               </div>
               <div className="mt-4 flex justify-center">
                 <Button
@@ -66,7 +128,7 @@ export default function DashboardPage() {
               </div>
             </TabsContent>
             <TabsContent value="EngKor">
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 <Textarea
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Enter English text to translate..."
@@ -78,6 +140,56 @@ export default function DashboardPage() {
                   readOnly
                   className="h-64 text-lg bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                 />
+                {sources && sources.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <TooltipProvider>
+                      {sources.map((s, idx) => (
+                        <Tooltip key={idx}>
+                          <TooltipTrigger asChild>
+                            <span className="inline-flex items-center gap-1 rounded-full bg-gray-800 border border-gray-700 px-2 py-1 text-xs text-gray-200 cursor-help">
+                              <Info className="h-3.5 w-3.5 text-green-400" />
+                              Source {idx + 1}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="top"
+                            className="max-w-xs break-words"
+                          >
+                            <div className="text-xs space-y-1">
+                              {s.source && (
+                                <div>
+                                  <span className="text-gray-400">source:</span>{" "}
+                                  {s.source}
+                                </div>
+                              )}
+                              {s.category && (
+                                <div>
+                                  <span className="text-gray-400">
+                                    category:
+                                  </span>{" "}
+                                  {s.category}
+                                </div>
+                              )}
+                              <div>
+                                <span className="text-gray-400">korean:</span>{" "}
+                                {s.korean}
+                              </div>
+                              <div>
+                                <span className="text-gray-400">english:</span>{" "}
+                                {s.english}
+                              </div>
+                              {s.description && (
+                                <div className="text-gray-300">
+                                  {s.description}
+                                </div>
+                              )}
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      ))}
+                    </TooltipProvider>
+                  </div>
+                )}
               </div>
               <div className="mt-4 flex justify-center">
                 <Button

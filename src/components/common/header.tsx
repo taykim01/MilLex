@@ -10,10 +10,10 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-700 bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-gray-900/60">
-      <div className="container flex h-14 items-center justify-between">
+      <div className="container px-5 sm:px-6 md:px-8 !max-w-full flex h-14 items-center justify-between">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-500">
-            ROKMC_BIGDATA
+            MilLex
           </span>
         </Link>
         {showAuthButton && (

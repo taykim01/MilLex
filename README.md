@@ -1,10 +1,10 @@
-# ROKMC_BIGDATA: AI/Big Data-Based Military Translator
+# MilLex: AI/Big Data-Based Military Translator
 
 This project is an AI/Big Data-based translator designed to bridge the language gap between Korean and English for military purposes, specifically for the Republic of Korea (ROK) armed forces.
 
 ## Project Overview
 
-ROKMC_BIGDATA is a specialized translation tool that leverages advanced AI and big data technologies to provide accurate and context-aware translations of military terminology. The primary goal is to facilitate clear and effective communication in joint military operations, intelligence sharing, and other multilingual environments involving the ROK armed forces.
+MilLex is a specialized translation tool that leverages advanced AI and big data technologies to provide accurate and context-aware translations of military terminology. The primary goal is to facilitate clear and effective communication in joint military operations, intelligence sharing, and other multilingual environments involving the ROK armed forces.
 
 ### Key Features
 
@@ -36,7 +36,7 @@ To get a local copy up and running, follow these simple steps.
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/your_username/ROKMC_BIGDATA.git
+   git clone https://github.com/taykim01/MilLex.git
    ```
 2. Install NPM packages
    ```sh

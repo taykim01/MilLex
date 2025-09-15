@@ -135,19 +135,48 @@ export default class SupabaseService<Entity> {
     embedding: number[],
     rpc: string,
     match_count: number = 10,
-    params?: object
+    params?: object,
+    match_threshold: number = 0.78,
+    timeoutMs: number = 8000
   ) {
     const supabase = await createClient();
-    const { data, error } = await supabase.rpc(rpc, {
-      query_embedding: embedding,
-      match_threshold: 0.78,
-      match_count,
-      ...params,
-    });
-    if (error) {
-      console.error(error);
-      throw new Error(error.message);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const { data, error } = await supabase
+        .rpc(rpc, {
+          query_embedding: embedding,
+          match_threshold,
+          match_count,
+          ...params,
+        })
+        .abortSignal(controller.signal);
+
+      if (error) {
+        // Gracefully handle Postgres statement timeout and client-side aborts
+        const code = (error as any).code;
+        const name = (error as any).name;
+        const message = error.message || "";
+
+        if (
+          code === "57014" ||
+          /statement timeout/i.test(message) ||
+          name === "AbortError" ||
+          code === "20" ||
+          /operation was aborted|aborted/i.test(message)
+        ) {
+          console.warn(
+            "Supabase RPC aborted/timeout. Returning empty results."
+          );
+          return [];
+        }
+        console.error(error);
+        throw new Error(error.message);
+      }
+      return data;
+    } finally {
+      clearTimeout(timeoutId);
     }
-    return data;
   }
 }

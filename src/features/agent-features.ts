@@ -24,21 +24,51 @@ export async function handleTranslate(
   const similarNotes: TermsTable[] = await termsService.getSimilarVector(
     queryVector,
     "query_term",
-    5
+    4,
+    undefined,
+    0.8
   );
-  if (similarNotes.length === 0)
-    return {
-      data: "No relevant notes found.",
-      error: null,
-    };
 
-  const refinedNotes = similarNotes.map((note) => ({
+  const refinedNotes = (similarNotes || []).map((note) => ({
     korean: note.korean,
     english: note.english,
     description: note.description,
     source: note.source,
     category: note.category,
   }));
+
+  let filteredNotes = refinedNotes;
+  try {
+    const filterMessages: ChatCompletionParam[] = [
+      {
+        role: "system",
+        content:
+          "You are a precise filter. Return ONLY JSON, no prose. Given a user query and a list of term objects, return an array of the term objects that are ACTUALLY present in the query as whole words or apparent mentions. Consider both Korean and English fields. If none, return an empty array [].",
+      },
+      {
+        role: "user",
+        content: JSON.stringify({
+          query,
+          terms: refinedNotes,
+        }),
+      },
+    ];
+
+    const filterResponse = await openAIService.generateResponse(
+      filterMessages,
+      "text",
+      "gpt-4o-mini"
+    );
+    const parsed = JSON.parse(filterResponse || "[]");
+    if (Array.isArray(parsed)) {
+      filteredNotes = parsed.filter(
+        (t) => typeof t === "object" && (t.korean || t.english)
+      );
+    }
+  } catch {
+    // If filtering fails for any reason, fall back to the original refinedNotes
+    filteredNotes = refinedNotes;
+  }
 
   const semanticMessages: ChatCompletionParam[] = [
     {
@@ -47,14 +77,16 @@ export async function handleTranslate(
           ${contextPrompt}
 
           #ROLE#
-          Your role is to translate the user's input into ${translateLanguage === "KorEng" ? "English" : "Korean"} from ${translateLanguage === "KorEng" ? "Korean" : "English"}.
+          Your role is to translate the user's input into ${
+            translateLanguage === "KorEng" ? "English" : "Korean"
+          } from ${translateLanguage === "KorEng" ? "Korean" : "English"}.
           Provide accurate translations, especially for military terms.
 
           #GOAL#
           Respond to the user's query given the relevant notes.
 
           #RELEVANT TERMS IN QUERY#
-          ${JSON.stringify(refinedNotes)}
+          ${JSON.stringify(filteredNotes || [])}
         `,
     },
     {
@@ -70,6 +102,7 @@ export async function handleTranslate(
 
   return {
     data: semanticResponse,
+    sources: filteredNotes,
     error: null,
   };
 }

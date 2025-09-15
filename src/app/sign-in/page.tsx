@@ -27,9 +27,17 @@ export default function SignInPage() {
             </CardTitle>
             <CardDescription className="text-gray-400">
               <div className="mt-2 text-sm">
-              <span className="block">시범 계정</span>
-              <span className="block">이메일: <span className="font-medium text-gray-300">demo@demo.com</span></span>
-              <span className="block">비밀번호: <span className="font-medium text-gray-300">demo1234</span></span>
+                <span className="block">시범 계정</span>
+                <span className="block">
+                  이메일:{" "}
+                  <span className="font-medium text-gray-300">
+                    demo@demo.com
+                  </span>
+                </span>
+                <span className="block">
+                  비밀번호:{" "}
+                  <span className="font-medium text-gray-300">demo1234</span>
+                </span>
               </div>
             </CardDescription>
           </CardHeader>
@@ -44,7 +52,7 @@ export default function SignInPage() {
                 </label>
                 <Input
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="service.number@rokmc.mil.kr"
+                  placeholder="service.number@millex.mil.kr"
                   required
                   className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-500"
                 />

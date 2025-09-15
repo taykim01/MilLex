@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ROKMC_BIGDATA",
-  description: "2025 육군 빅데이터 경진대회",
+  title: "MilLex",
+  description: "부서별 전문용어를 학습한 RAG 기반 군 전용 AI 번역 시스템",
 };
 
 export default function RootLayout({

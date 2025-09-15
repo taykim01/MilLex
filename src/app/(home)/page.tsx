@@ -19,7 +19,7 @@ export default function Home() {
           <div className="container mx-auto px-4 md:px-6 text-center">
             <div className="max-w-3xl mx-auto">
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-500">
-                ROKMC_BIGDATA
+                MilLex
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-300 md:text-xl">
                 대한민국 국군을 위한 AI/빅데이터 기반 군사 전문 번역 솔루션.
@@ -120,7 +120,7 @@ export default function Home() {
               전장의 소통, 지금 바로 혁신하십시오.
             </h2>
             <p className="mt-4 max-w-2xl mx-auto text-gray-400">
-              ROKMC_BIGDATA와 함께라면 언어의 장벽은 더 이상 없습니다. 지금 바로
+              MilLex와 함께라면 언어의 장벽은 더 이상 없습니다. 지금 바로
               로그인하여 미래의 군사 통신을 경험하세요.
             </p>
             <div className="mt-8">
