@@ -24,6 +24,115 @@ export default function DashboardPage() {
     sources,
   } = useTranslation();
 
+  const escapeRegExp = (str: string) =>
+    str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const renderHighlighted = (text: string) => {
+    if (!text) return null;
+    const termEntries: Array<{ value: string; sourceIdx: number }> = [];
+    (sources || []).forEach((s, idx) => {
+      if (s.english) termEntries.push({ value: s.english, sourceIdx: idx });
+      if (s.korean) termEntries.push({ value: s.korean, sourceIdx: idx });
+    });
+    const uniqueTerms = Array.from(
+      new Map(termEntries.map((t) => [t.value.toLowerCase(), t])).values()
+    ).sort((a, b) => b.value.length - a.value.length);
+    if (uniqueTerms.length === 0) {
+      return text
+        .split(/(\n)/)
+        .map((seg, i) =>
+          seg === "\n" ? <br key={i} /> : <span key={i}>{seg}</span>
+        );
+    }
+    const pattern = uniqueTerms.map((t) => escapeRegExp(t.value)).join("|");
+    const regex = new RegExp(pattern, "gi");
+    const nodes: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+    while ((match = regex.exec(text)) !== null) {
+      const start = match.index;
+      const end = regex.lastIndex;
+      if (start > lastIndex) {
+        const plain = text.slice(lastIndex, start);
+        nodes.push(
+          ...plain
+            .split(/(\n)/)
+            .map((seg, i) =>
+              seg === "\n" ? (
+                <br key={`${lastIndex}-${start}-${i}`} />
+              ) : (
+                <span key={`${lastIndex}-${start}-${i}`}>{seg}</span>
+              )
+            )
+        );
+      }
+      const matchedText = match[0];
+      const found = uniqueTerms.find(
+        (t) => t.value.toLowerCase() === matchedText.toLowerCase()
+      );
+      const src =
+        typeof found?.sourceIdx === "number"
+          ? sources[found.sourceIdx]
+          : undefined;
+      nodes.push(
+        <TooltipProvider key={`hl-${start}-${end}`}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="bg-green-950/40 text-green-200 border border-green-800/60 px-1 rounded-sm underline decoration-dotted cursor-help">
+                {matchedText}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-xs break-words">
+              <div className="text-xs space-y-1">
+                {src?.source && (
+                  <div>
+                    <span className="text-gray-400">Source:</span> {src.source}
+                  </div>
+                )}
+                {src?.category && (
+                  <div>
+                    <span className="text-gray-400">Category:</span>{" "}
+                    {src.category}
+                  </div>
+                )}
+                {src?.korean && (
+                  <div>
+                    <span className="text-gray-400">Korean:</span> {src.korean}
+                  </div>
+                )}
+                {src?.english && (
+                  <div>
+                    <span className="text-gray-400">English:</span>{" "}
+                    {src.english}
+                  </div>
+                )}
+                {src?.description && (
+                  <div className="text-gray-500">{src.description}</div>
+                )}
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+      lastIndex = end;
+    }
+    if (lastIndex < text.length) {
+      const tail = text.slice(lastIndex);
+      nodes.push(
+        ...tail
+          .split(/(\n)/)
+          .map((seg, i) =>
+            seg === "\n" ? (
+              <br key={`tail-${lastIndex}-${i}`} />
+            ) : (
+              <span key={`tail-${lastIndex}-${i}`}>{seg}</span>
+            )
+          )
+      );
+    }
+    return nodes;
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-900 text-white font-sans">
       <Header />
@@ -58,12 +167,9 @@ export default function DashboardPage() {
                   placeholder="번역할 한국어 내용을 입력하세요..."
                   className="h-64 text-lg bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                 />
-                <Textarea
-                  placeholder="Translated English text will appear here..."
-                  value={response || ""}
-                  readOnly
-                  className="h-64 text-lg bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
-                />
+                <div className="h-64 bg-gray-800 border border-gray-700 text-white rounded-md px-3 py-2 text-base md:text-sm shadow-xs overflow-auto whitespace-pre-wrap">
+                  {renderHighlighted(response || "")}
+                </div>
                 {sources && sources.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
                     <TooltipProvider>
@@ -134,12 +240,9 @@ export default function DashboardPage() {
                   placeholder="Enter English text to translate..."
                   className="h-64 text-lg bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                 />
-                <Textarea
-                  placeholder="번역된 한국어 내용이 여기에 표시됩니다..."
-                  value={response || ""}
-                  readOnly
-                  className="h-64 text-lg bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
-                />
+                <div className="h-64 bg-gray-800 border border-gray-700 text-white rounded-md px-3 py-2 text-base md:text-sm shadow-xs overflow-auto whitespace-pre-wrap">
+                  {renderHighlighted(response || "")}
+                </div>
                 {sources && sources.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
                     <TooltipProvider>
@@ -194,7 +297,7 @@ export default function DashboardPage() {
               <div className="mt-4 flex justify-center">
                 <Button
                   size="lg"
-                  className="bg-green-600 hover:bg-green-700 text-white font-bold"
+                  className="bg-green-400 hover:bg-green-500 text-white font-bold"
                   onClick={translate}
                   disabled={loading}
                 >
