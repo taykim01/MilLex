@@ -137,13 +137,18 @@ export default class SupabaseService<Entity> {
     match_count: number = 10,
     params?: object,
     match_threshold: number = 0.78,
-    timeoutMs: number = 8000
+    timeoutMs: number = 15000
   ) {
     const supabase = await createClient();
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const timeoutId = setTimeout(() => {
+      console.warn(`RPC call timeout after ${timeoutMs}ms, aborting...`);
+      controller.abort();
+    }, timeoutMs);
 
     try {
+      console.log(`Starting RPC call: ${rpc} with timeout: ${timeoutMs}ms`);
+
       const { data, error } = await supabase
         .rpc(rpc, {
           query_embedding: embedding,
@@ -154,10 +159,11 @@ export default class SupabaseService<Entity> {
         .abortSignal(controller.signal);
 
       if (error) {
-        // Gracefully handle Postgres statement timeout and client-side aborts
         const code = (error as any).code;
         const name = (error as any).name;
         const message = error.message || "";
+
+        console.error("RPC Error:", { code, name, message, error });
 
         if (
           code === "57014" ||
@@ -171,10 +177,18 @@ export default class SupabaseService<Entity> {
           );
           return [];
         }
-        console.error(error);
-        throw new Error(error.message);
+        throw new Error(`RPC Error: ${message} (Code: ${code})`);
       }
-      return data;
+
+      console.log(`RPC call successful, returned ${data?.length || 0} results`);
+      return data || [];
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        console.warn("RPC call was aborted due to timeout");
+        return [];
+      }
+      console.error("Unexpected error in getSimilarVector:", error);
+      throw error;
     } finally {
       clearTimeout(timeoutId);
     }

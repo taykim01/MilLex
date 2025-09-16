@@ -17,18 +17,28 @@ export async function handleTranslate(
 ) {
   const openAIService = new OpenAIService();
   const termsService = new SupabaseService<TermsTable>(TABLES.terms);
-  const queryVector = await openAIService.generateEmbedding(
-    query,
-    "text-embedding-3-large"
-  );
-  const similarNotes: TermsTable[] = await termsService.getSimilarVector(
-    queryVector,
-    "query_term",
-    4,
-    undefined,
-    0.8,
-    60000
-  );
+  let similarNotes: TermsTable[] = [];
+
+  try {
+    const queryVector = await openAIService.generateEmbedding(
+      query,
+      "text-embedding-3-large"
+    );
+    similarNotes = await termsService.getSimilarVector(
+      queryVector,
+      "query_term",
+      3, // Reduced from 4 to 3 for faster query
+      undefined,
+      0.75, // Slightly lowered threshold for better performance
+      12000 // Reduced timeout to 12 seconds
+    );
+  } catch (error) {
+    console.warn(
+      "Vector similarity search failed, proceeding without context:",
+      error
+    );
+    // Continue with empty similarNotes array
+  }
 
   const refinedNotes = (similarNotes || []).map((note) => ({
     korean: note.korean,
