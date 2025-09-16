@@ -27,18 +27,24 @@ export async function handleTranslate(
     similarNotes = await termsService.getSimilarVector(
       queryVector,
       "query_term",
-      3, // Reduced from 4 to 3 for faster query
+      5,
       undefined,
-      0.75, // Slightly lowered threshold for better performance
-      12000 // Reduced timeout to 12 seconds
+      0.75,
+      12000
     );
   } catch (error) {
     console.warn(
       "Vector similarity search failed, proceeding without context:",
       error
     );
-    // Continue with empty similarNotes array
   }
+
+  console.log({
+    similarNotes: similarNotes.map((note) => ({
+      korean: note.korean,
+      english: note.english,
+    })),
+  });
 
   const refinedNotes = (similarNotes || []).map((note) => ({
     korean: note.korean,
@@ -77,7 +83,6 @@ export async function handleTranslate(
       );
     }
   } catch {
-    // If filtering fails for any reason, fall back to the original refinedNotes
     filteredNotes = refinedNotes;
   }
 
